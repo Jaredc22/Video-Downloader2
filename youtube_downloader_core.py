@@ -56,7 +56,7 @@ def download_youtube(url: str, audio_only: bool = False, resolution: str = "1080
         if have_ffmpeg:
             # Best video <= resolution + best audio; merge to MP4
             ydl_opts.update({
-                "format": f"bestvideo[height<={resolution}]+bestaudio/best[height<={resolution}]/best",
+                "format": f"bestvideo[ext=mp4][vcodec^=avc1][height<={resolution}]+bestaudio[ext=m4a]/best[ext=mp4]",
                 "merge_output_format": "mp4",
             })
         else:
