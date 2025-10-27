@@ -53,25 +53,25 @@ def download_youtube(url: str, audio_only: bool = False, resolution: str = "1080
                 "format": "bestaudio[ext=m4a]/bestaudio/best"
             })
     else:
-    if have_ffmpeg:
-        # Try QT-friendly H.264 MP4 first, then fall back if unavailable
-        format_chain = (
-            f"bestvideo[ext=mp4][vcodec^=avc1][height<={resolution}]+bestaudio[ext=m4a]/"
-            f"bestvideo[height<={resolution}]+bestaudio/"
-            "best"
-        )
-        ydl_opts.update({
-            "format": format_chain,
-            "merge_output_format": "mp4",
-            "postprocessors": [
-                {"key": "FFmpegVideoRemuxer", "preferedformat": "mp4"}
-            ],
-        })
-    else:
-        # Fallback: single, already-muxed stream to avoid merge
-        ydl_opts.update({
-            "format": "best[ext=mp4]/best"
-        })
+        if have_ffmpeg:
+            # Try QT-friendly H.264 MP4 first, then fall back if unavailable
+            format_chain = (
+                f"bestvideo[ext=mp4][vcodec^=avc1][height<={resolution}]+bestaudio[ext=m4a]/"
+                f"bestvideo[height<={resolution}]+bestaudio/"
+                "best"
+            )
+            ydl_opts.update({
+                "format": format_chain,
+                "merge_output_format": "mp4",
+                "postprocessors": [
+                    {"key": "FFmpegVideoRemuxer", "preferedformat": "mp4"}
+                ],
+            })
+        else:
+            # Fallback: single, already-muxed stream to avoid merge
+            ydl_opts.update({
+                "format": "best[ext=mp4]/best"
+            })
 
     try:
         with YoutubeDL(ydl_opts) as ydl:
